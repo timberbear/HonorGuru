@@ -5,15 +5,9 @@
 ## Version: 1.0.0
 ## SavedVariables: HonorGuruDB
 ## SavedVariablesPerCharacter: HonorGuruCharDB
-## Dependencies: Ace3
-
-# Libraries
-Libs\LibStub\LibStub.lua
-Libs\AceLocale-3.0\AceLocale-3.0.lua
 
 # Localization
-Locales\enUS.lua
-Locales\zhCN.lua
+Locales\Locale.lua
 
 # Core files
 HonorGuru.lua

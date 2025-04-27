@@ -1,6 +1,6 @@
 -- HonorGuru Configuration
 local addonName, addon = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("HonorGuru")
+local L = addon.L
 
 -- Default configuration
 local defaultConfig = {
@@ -25,12 +25,12 @@ local function CreateConfigPanel()
     -- Title
     local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
     title:SetPoint("TOPLEFT", 16, -16)
-    title:SetText(L["ADDON_DESCRIPTION"])
+    title:SetText(L.CONFIG_TITLE)
     
     -- Enable addon
     local enableCheckbox = CreateFrame("CheckButton", "HonorGuruEnableCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
     enableCheckbox:SetPoint("TOPLEFT", 16, -50)
-    enableCheckbox.Text:SetText(L["ENABLE_ADDON"])
+    enableCheckbox.Text:SetText(L.ENABLE_ADDON)
     enableCheckbox:SetScript("OnClick", function(self)
         HonorGuruDB.enabled = self:GetChecked()
     end)
@@ -42,7 +42,7 @@ local function CreateConfigPanel()
     minSquadsSlider:SetValueStep(1)
     minSquadsSlider:SetScript("OnValueChanged", function(self, value)
         HonorGuruDB.minSquads = value
-        getglobal(self:GetName().."Text"):SetText(L["MIN_SQUADS"]..": "..value)
+        getglobal(self:GetName().."Text"):SetText(L.MIN_SQUADS..": "..value)
     end)
     
     -- Minimum players
@@ -52,13 +52,13 @@ local function CreateConfigPanel()
     minPlayersSlider:SetValueStep(10)
     minPlayersSlider:SetScript("OnValueChanged", function(self, value)
         HonorGuruDB.minPlayers = value
-        getglobal(self:GetName().."Text"):SetText(L["MIN_PLAYERS"]..": "..value)
+        getglobal(self:GetName().."Text"):SetText(L.MIN_PLAYERS..": "..value)
     end)
     
     -- Countdown notification
     local countdownCheckbox = CreateFrame("CheckButton", "HonorGuruCountdownCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
     countdownCheckbox:SetPoint("TOPLEFT", 16, -170)
-    countdownCheckbox.Text:SetText(L["SHOW_COUNTDOWN"])
+    countdownCheckbox.Text:SetText(L.SHOW_COUNTDOWN)
     countdownCheckbox:SetScript("OnClick", function(self)
         HonorGuruDB.countdownEnabled = self:GetChecked()
     end)
@@ -66,7 +66,7 @@ local function CreateConfigPanel()
     -- Sound notification
     local soundCheckbox = CreateFrame("CheckButton", "HonorGuruSoundCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
     soundCheckbox:SetPoint("TOPLEFT", 16, -210)
-    soundCheckbox.Text:SetText(L["ENABLE_SOUND"])
+    soundCheckbox.Text:SetText(L.ENABLE_SOUND)
     soundCheckbox:SetScript("OnClick", function(self)
         HonorGuruDB.soundEnabled = self:GetChecked()
     end)
@@ -74,9 +74,25 @@ local function CreateConfigPanel()
     -- Auto queue
     local autoQueueCheckbox = CreateFrame("CheckButton", "HonorGuruAutoQueueCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
     autoQueueCheckbox:SetPoint("TOPLEFT", 16, -250)
-    autoQueueCheckbox.Text:SetText(L["AUTO_QUEUE"])
+    autoQueueCheckbox.Text:SetText(L.AUTO_QUEUE)
     autoQueueCheckbox:SetScript("OnClick", function(self)
         HonorGuruDB.autoQueue = self:GetChecked()
+    end)
+    
+    -- Auto Accept
+    local autoAcceptCheckbox = CreateFrame("CheckButton", "HonorGuruAutoAcceptCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
+    autoAcceptCheckbox:SetPoint("TOPLEFT", 16, -290)
+    autoAcceptCheckbox.Text:SetText(L.CONFIG_AUTO_ACCEPT)
+    autoAcceptCheckbox:SetScript("OnClick", function(self)
+        HonorGuruDB.settings.autoAccept = self:GetChecked()
+    end)
+    
+    -- Debug Mode
+    local debugModeCheckbox = CreateFrame("CheckButton", "HonorGuruDebugModeCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
+    debugModeCheckbox:SetPoint("TOPLEFT", 16, -330)
+    debugModeCheckbox.Text:SetText(L.CONFIG_DEBUG_MODE)
+    debugModeCheckbox:SetScript("OnClick", function(self)
+        HonorGuruDB.settings.debugMode = self:GetChecked()
     end)
     
     -- Initialize values
@@ -87,6 +103,8 @@ local function CreateConfigPanel()
         countdownCheckbox:SetChecked(HonorGuruDB.countdownEnabled)
         soundCheckbox:SetChecked(HonorGuruDB.soundEnabled)
         autoQueueCheckbox:SetChecked(HonorGuruDB.autoQueue)
+        autoAcceptCheckbox:SetChecked(HonorGuruDB.settings.autoAccept)
+        debugModeCheckbox:SetChecked(HonorGuruDB.settings.debugMode)
     end
     
     InterfaceOptions_AddCategory(panel)

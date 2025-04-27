@@ -1,6 +1,6 @@
 -- HonorGuru UI
 local addonName, addon = ...
-local L = LibStub("AceLocale-3.0"):GetLocale("HonorGuru")
+local L = addon.L
 
 -- Main window
 local mainFrame = nil
@@ -21,7 +21,7 @@ local function CreateMainFrame()
     -- Title
     frame.title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.title:SetPoint("TOP", 0, -5)
-    frame.title:SetText(L["ADDON_DESCRIPTION"])
+    frame.title:SetText(L.ADDON_DESCRIPTION)
     
     -- Close button
     frame.closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
@@ -34,7 +34,7 @@ local function CreateMainFrame()
     -- Info tab
     local infoTab = CreateFrame("Button", "HonorGuruInfoTab", frame, "CharacterFrameTabButtonTemplate")
     infoTab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
-    infoTab:SetText(L["INFO_TAB"])
+    infoTab:SetText(L.INFO_TAB)
     frame.tabs[1] = infoTab
     
     local infoFrame = CreateFrame("Frame", nil, frame)
@@ -44,7 +44,7 @@ local function CreateMainFrame()
     local infoText = infoFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     infoText:SetPoint("TOPLEFT")
     infoText:SetPoint("BOTTOMRIGHT")
-    infoText:SetText(L["INFO_TEXT"])
+    infoText:SetText(L.INFO_TEXT)
     infoText:SetJustifyH("LEFT")
     infoText:SetJustifyV("TOP")
     infoText:SetSpacing(2)
@@ -53,7 +53,7 @@ local function CreateMainFrame()
     -- Queue tab
     local queueTab = CreateFrame("Button", "HonorGuruQueueTab", frame, "CharacterFrameTabButtonTemplate")
     queueTab:SetPoint("LEFT", infoTab, "RIGHT", -15, 0)
-    queueTab:SetText(L["MAIN_TAB"])
+    queueTab:SetText(L.MAIN_TAB)
     frame.tabs[2] = queueTab
     
     local queueFrame = CreateFrame("Frame", nil, frame)
@@ -112,7 +112,7 @@ function UpdateSquadList()
         -- Create squad title
         local squadTitle = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         squadTitle:SetPoint("TOPLEFT", 5, -yOffset)
-        squadTitle:SetText(L["SQUAD"]..": "..squadName)
+        squadTitle:SetText(L.SQUAD..": "..squadName)
         
         yOffset = yOffset + 20
         
@@ -123,13 +123,13 @@ function UpdateSquadList()
             local status = ""
             if HonorGuruDB.squadMembers[memberName] then
                 if HonorGuruDB.squadMembers[memberName].ready then
-                    status = " ("..L["READY"]..")"
+                    status = " ("..L.READY..")"
                 elseif HonorGuruDB.squadMembers[memberName].hasDebuff then
-                    status = " ("..L["HAS_DEBUFF"]..")"
+                    status = " ("..L.HAS_DEBUFF..")"
                 elseif HonorGuruDB.squadMembers[memberName].inQueue then
-                    status = " ("..L["IN_QUEUE"]..")"
+                    status = " ("..L.IN_QUEUE..")"
                 else
-                    status = " ("..L["NOT_READY"]..")"
+                    status = " ("..L.NOT_READY..")"
                 end
             end
             memberText:SetText(memberName..status)
