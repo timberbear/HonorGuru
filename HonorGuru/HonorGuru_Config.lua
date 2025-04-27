@@ -1,7 +1,8 @@
--- HonorGuru 配置
+-- HonorGuru Configuration
 local addonName, addon = ...
+local L = LibStub("AceLocale-3.0"):GetLocale("HonorGuru")
 
--- 默认配置
+-- Default configuration
 local defaultConfig = {
     enabled = true,
     minSquads = 4,
@@ -16,69 +17,69 @@ local defaultConfig = {
     debuffCheckInterval = 5,
 }
 
--- 创建配置面板
+-- Create configuration panel
 local function CreateConfigPanel()
     local panel = CreateFrame("Frame", "HonorGuruConfigPanel", InterfaceOptionsFramePanelContainer)
     panel.name = "HonorGuru"
     
-    -- 标题
+    -- Title
     local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
     title:SetPoint("TOPLEFT", 16, -16)
-    title:SetText("HonorGuru 设置")
+    title:SetText(L["ADDON_DESCRIPTION"])
     
-    -- 启用插件
+    -- Enable addon
     local enableCheckbox = CreateFrame("CheckButton", "HonorGuruEnableCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
     enableCheckbox:SetPoint("TOPLEFT", 16, -50)
-    enableCheckbox.Text:SetText("启用插件")
+    enableCheckbox.Text:SetText(L["ENABLE_ADDON"])
     enableCheckbox:SetScript("OnClick", function(self)
         HonorGuruDB.enabled = self:GetChecked()
     end)
     
-    -- 最小小队数量
+    -- Minimum squads
     local minSquadsSlider = CreateFrame("Slider", "HonorGuruMinSquadsSlider", panel, "OptionsSliderTemplate")
     minSquadsSlider:SetPoint("TOPLEFT", 16, -90)
     minSquadsSlider:SetMinMaxValues(1, 10)
     minSquadsSlider:SetValueStep(1)
     minSquadsSlider:SetScript("OnValueChanged", function(self, value)
         HonorGuruDB.minSquads = value
-        getglobal(self:GetName().."Text"):SetText("最小小队数量: "..value)
+        getglobal(self:GetName().."Text"):SetText(L["MIN_SQUADS"]..": "..value)
     end)
     
-    -- 最小玩家数量
+    -- Minimum players
     local minPlayersSlider = CreateFrame("Slider", "HonorGuruMinPlayersSlider", panel, "OptionsSliderTemplate")
     minPlayersSlider:SetPoint("TOPLEFT", 16, -130)
     minPlayersSlider:SetMinMaxValues(100, 400)
     minPlayersSlider:SetValueStep(10)
     minPlayersSlider:SetScript("OnValueChanged", function(self, value)
         HonorGuruDB.minPlayers = value
-        getglobal(self:GetName().."Text"):SetText("最小玩家数量: "..value)
+        getglobal(self:GetName().."Text"):SetText(L["MIN_PLAYERS"]..": "..value)
     end)
     
-    -- 倒计时提示
+    -- Countdown notification
     local countdownCheckbox = CreateFrame("CheckButton", "HonorGuruCountdownCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
     countdownCheckbox:SetPoint("TOPLEFT", 16, -170)
-    countdownCheckbox.Text:SetText("显示倒计时提示")
+    countdownCheckbox.Text:SetText(L["SHOW_COUNTDOWN"])
     countdownCheckbox:SetScript("OnClick", function(self)
         HonorGuruDB.countdownEnabled = self:GetChecked()
     end)
     
-    -- 声音提示
+    -- Sound notification
     local soundCheckbox = CreateFrame("CheckButton", "HonorGuruSoundCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
     soundCheckbox:SetPoint("TOPLEFT", 16, -210)
-    soundCheckbox.Text:SetText("启用声音提示")
+    soundCheckbox.Text:SetText(L["ENABLE_SOUND"])
     soundCheckbox:SetScript("OnClick", function(self)
         HonorGuruDB.soundEnabled = self:GetChecked()
     end)
     
-    -- 自动排队
+    -- Auto queue
     local autoQueueCheckbox = CreateFrame("CheckButton", "HonorGuruAutoQueueCheckbox", panel, "InterfaceOptionsCheckButtonTemplate")
     autoQueueCheckbox:SetPoint("TOPLEFT", 16, -250)
-    autoQueueCheckbox.Text:SetText("自动排队")
+    autoQueueCheckbox.Text:SetText(L["AUTO_QUEUE"])
     autoQueueCheckbox:SetScript("OnClick", function(self)
         HonorGuruDB.autoQueue = self:GetChecked()
     end)
     
-    -- 初始化值
+    -- Initialize values
     function panel.refresh()
         enableCheckbox:SetChecked(HonorGuruDB.enabled)
         minSquadsSlider:SetValue(HonorGuruDB.minSquads)
@@ -91,9 +92,9 @@ local function CreateConfigPanel()
     InterfaceOptions_AddCategory(panel)
 end
 
--- 初始化配置
+-- Initialize configuration
 local function InitializeConfig()
-    -- 确保配置存在
+    -- Ensure configuration exists
     HonorGuruDB = HonorGuruDB or {}
     for k, v in pairs(defaultConfig) do
         if HonorGuruDB[k] == nil then
@@ -101,11 +102,11 @@ local function InitializeConfig()
         end
     end
     
-    -- 创建配置面板
+    -- Create configuration panel
     CreateConfigPanel()
 end
 
--- 注册初始化事件
+-- Register initialization event
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function(self, event)

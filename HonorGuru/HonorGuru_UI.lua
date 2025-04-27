@@ -2,11 +2,11 @@
 local addonName, addon = ...
 local L = LibStub("AceLocale-3.0"):GetLocale("HonorGuru")
 
--- 主窗口
+-- Main window
 local mainFrame = nil
 local isNPCOpen = false
 
--- 创建主窗口
+-- Create main window
 local function CreateMainFrame()
     local frame = CreateFrame("Frame", "HonorGuruFrame", UIParent, "BasicFrameTemplate")
     frame:SetSize(300, 400)
@@ -18,20 +18,20 @@ local function CreateMainFrame()
     frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
     frame:Hide()
     
-    -- 标题
+    -- Title
     frame.title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     frame.title:SetPoint("TOP", 0, -5)
     frame.title:SetText(L["ADDON_DESCRIPTION"])
     
-    -- 关闭按钮
+    -- Close button
     frame.closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
     frame.closeButton:SetPoint("TOPRIGHT", -5, -5)
     
-    -- 创建标签页
+    -- Create tabs
     frame.tabs = {}
     frame.tabFrames = {}
     
-    -- 信息标签页
+    -- Info tab
     local infoTab = CreateFrame("Button", "HonorGuruInfoTab", frame, "CharacterFrameTabButtonTemplate")
     infoTab:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 5, 0)
     infoTab:SetText(L["INFO_TAB"])
@@ -50,7 +50,7 @@ local function CreateMainFrame()
     infoText:SetSpacing(2)
     frame.tabFrames[1] = infoFrame
     
-    -- 排队标签页
+    -- Queue tab
     local queueTab = CreateFrame("Button", "HonorGuruQueueTab", frame, "CharacterFrameTabButtonTemplate")
     queueTab:SetPoint("LEFT", infoTab, "RIGHT", -15, 0)
     queueTab:SetText(L["MAIN_TAB"])
@@ -60,7 +60,7 @@ local function CreateMainFrame()
     queueFrame:SetPoint("TOPLEFT", 10, -30)
     queueFrame:SetPoint("BOTTOMRIGHT", -10, 10)
     
-    -- 小队列表
+    -- Squad list
     queueFrame.squadList = CreateFrame("ScrollFrame", "HonorGuruSquadList", queueFrame, "UIPanelScrollFrameTemplate")
     queueFrame.squadList:SetPoint("TOPLEFT", 0, 0)
     queueFrame.squadList:SetPoint("BOTTOMRIGHT", 0, 0)
@@ -70,7 +70,7 @@ local function CreateMainFrame()
     queueFrame.squadList:SetScrollChild(queueFrame.squadList.content)
     frame.tabFrames[2] = queueFrame
     
-    -- 标签页点击事件
+    -- Tab click event
     local function OnTabClick(tab)
         PanelTemplates_SetTab(frame, tab:GetID())
         for i, tabFrame in ipairs(frame.tabFrames) do
@@ -87,36 +87,36 @@ local function CreateMainFrame()
     infoTab:SetScript("OnClick", function(self) OnTabClick(self) end)
     queueTab:SetScript("OnClick", function(self) OnTabClick(self) end)
     
-    -- 初始显示信息标签页
+    -- Initially show info tab
     OnTabClick(infoTab)
     PanelTemplates_SetNumTabs(frame, 2)
     
     return frame
 end
 
--- 更新小队列表
+-- Update squad list
 function UpdateSquadList()
     if not mainFrame or not mainFrame.tabFrames[2].squadList then return end
     
     local content = mainFrame.tabFrames[2].squadList.content
-    -- 清除现有内容
+    -- Clear existing content
     for i = 1, #content do
         if content[i] then
             content[i]:Hide()
         end
     end
     
-    -- 添加小队
+    -- Add squads
     local yOffset = 0
     for squadName, members in pairs(HonorGuruDB.squads or {}) do
-        -- 创建小队标题
+        -- Create squad title
         local squadTitle = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         squadTitle:SetPoint("TOPLEFT", 5, -yOffset)
         squadTitle:SetText(L["SQUAD"]..": "..squadName)
         
         yOffset = yOffset + 20
         
-        -- 添加成员
+        -- Add members
         for _, memberName in ipairs(members) do
             local memberText = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
             memberText:SetPoint("TOPLEFT", 15, -yOffset)
@@ -140,30 +140,30 @@ function UpdateSquadList()
         yOffset = yOffset + 10
     end
     
-    -- 更新滚动区域大小
+    -- Update scroll area size
     content:SetHeight(math.max(yOffset, 360))
 end
 
--- 更新小队状态
+-- Update squad status
 function UpdateSquadStatus()
     if not mainFrame then return end
     UpdateSquadList()
 end
 
--- 更新排队状态
+-- Update queue status
 function UpdateQueueStatus()
     if not mainFrame then return end
     UpdateSquadList()
 end
 
--- 检查是否正在与战场军官对话
+-- Check if interacting with battlemaster
 local function CheckNPCInteraction()
     if not mainFrame then return end
     
-    -- 检查目标是否是战场军官
+    -- Check if target is battlemaster
     if UnitExists("target") and UnitGUID("target") then
         local _, _, _, _, _, npcID = strsplit("-", UnitGUID("target"))
-        if npcID == "13257" then -- 奥山战场军官的NPC ID
+        if npcID == "13257" then -- Alterac Valley battlemaster NPC ID
             isNPCOpen = true
             mainFrame:Show()
             return
@@ -174,12 +174,12 @@ local function CheckNPCInteraction()
     mainFrame:Hide()
 end
 
--- 初始化UI
+-- Initialize UI
 local function InitializeUI()
-    -- 创建主窗口
+    -- Create main window
     mainFrame = CreateMainFrame()
     
-    -- 注册事件
+    -- Register events
     local eventFrame = CreateFrame("Frame")
     eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
     eventFrame:RegisterEvent("CHAT_MSG_ADDON")
@@ -199,13 +199,13 @@ local function InitializeUI()
         end
     end)
     
-    -- 初始更新
+    -- Initial update
     UpdateSquadList()
     UpdateSquadStatus()
     UpdateQueueStatus()
 end
 
--- 注册初始化事件
+-- Register initialization event
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function(self, event)

@@ -1,6 +1,6 @@
 ## Interface: 11403
 ## Title: HonorGuru
-## Notes: 奥山战场排队协调插件
+## Notes: Alterac Valley Queue Coordinator
 ## Author: Your Name
 ## Version: 1.0.0
 ## SavedVariables: HonorGuruDB
